@@ -38,16 +38,9 @@
                     <label class="h4">最近发表</label>
                 </div>
                 <ul class="">
-                    <li><a href="#">测试文章列表1</a></li>
-                    <li><a href="#">测试文章列表2</a></li>
-                    <li><a href="#">测试文章列表3</a></li>
-                    <li><a href="#">测试文章列表4</a></li>
-                    <li><a href="#">测试文章列表5</a></li>
-                    <li><a href="#">测试文章列表1</a></li>
-                    <li><a href="#">测试文章列表2</a></li>
-                    <li><a href="#">测试文章列表3</a></li>
-                    <li><a href="#">测试文章列表4</a></li>
-                    <li><a href="#">测试文章列表5</a></li>
+                    @foreach($articles_new as $at)
+                        <li><a href="article/{{$at->id}}">{{$at->article_title}}</a></li>
+                    @endforeach
                 </ul>
             </div>
 
