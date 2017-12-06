@@ -2,8 +2,6 @@
 <html>
 <head>
     <title>blog</title>
-    {{--{*{{template "public_header.tpl" .}}*}--}}
-    {{--{*{{template "blog_style.tpl" .}}*}--}}
 
     @include('public_header')
     @include('blog_style')
@@ -17,8 +15,7 @@
 
         <div class="clearfix">
             <div class="center-block col-lg-12">
-                {{--<p>{{ json_encode($site) }}</p>--}}
-                <p class="h2" style="text-align: center;">{{$site[0]->website_title}}</p>
+                <p class="h2" style="text-align: center;"><a href="{{$site[0]->website_realmname}}">{{$site[0]->website_title}}</a></p>
                 <p class="text-muted" style="text-align: center;">{{$site[0]->website_subhead}}</p>
             </div>
         </div>

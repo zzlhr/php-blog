@@ -10,26 +10,15 @@ namespace App\Http\Controllers;
 
 use DB;
 use Log;
+use App\Http\Controllers\PublicData;
 
 class HomeController extends Controller
 {
+    public $public_util;
 
-
-    /**
-     * 获取站点信息。
-     * @return mixed
-     */
-    public function getsite(){
-
-        $site = DB::select('select 
-                    `website_title`, `website_subhead`, 
-                    `website_keyword`, `website_describe` 
-                  from `website`
-                  WHERE `id`=1');
-
-        return $site;
+    function __construct() {
+        $this->public_util = new PublicData();
     }
-
 
     public function index(){
 
@@ -38,10 +27,10 @@ class HomeController extends Controller
 
 
         //标题等网站基本信息
-        $site = $this->getsite();
+        $site = $this->public_util->getsite();
 
         //友情链接
-        $frined_links = $this->getFriendLink();
+        $frined_links = $this->public_util->getFriendLink();
 
         for ($i=0;$i<count($commend_article_list);$i++){
             $keyword = $commend_article_list[$i]->article_keyword;
@@ -49,18 +38,12 @@ class HomeController extends Controller
             $commend_article_list[$i]->article_keyword = $keyarray;
         }
 
-//        Log::info($site[0]->$commend_article_list);
-//        Log::info($site[0]->website_subhead);
 
         return view('index', ['site' => $site, 'commends' => $commend_article_list, 'friends' => $frined_links, 'type' => 1]);
 
     }
 
 
-    public function getFriendLink(){
-        $links = DB::select('select * from `friend_link` WHERE `link_status`=0 ORDER BY `link_location` DESC ');
-        return $links;
-    }
 
 
 }

@@ -10,35 +10,20 @@ namespace App\Http\Controllers\Article;
 
 
 use DB;
-
 use App\Http\Controllers\Controller;
-use Mockery\Exception;
+use \App\Http\Controllers\PublicData;
+
 
 class ArticleController extends Controller
 {
-    /**
-     * 获取站点信息。
-     * @return mixed
-     */
-    public function getsite(){
 
-        $site = DB::select('select 
-                    `website_title`, `website_subhead`, 
-                    `website_keyword`, `website_describe` 
-                  from `website`
-                  WHERE `id`=1');
+    public $public_util;
 
-        return $site;
+    function __construct() {
+        $this->public_util = new PublicData();
     }
 
-
     public function index($id){
-
-//        $param = $request->all();
-//        echo $param;
-
-//        Log::info("param", $param);
-//        Log::info("id={}",$id);
 
 
         $article_info = DB::select('select *  from article WHERE `id` = ?', [$id]);
@@ -52,28 +37,16 @@ class ArticleController extends Controller
         $keyarray = explode(",", $keyword);
         $article_info[0]->article_keyword = $keyarray;
 
-        $site = $this->getsite();
+        //获取站点信息
+        $site = $this->public_util->getsite();
 
         //友情链接
-        $frined_links = $this->getFriendLink();
+        $frined_links = $this->public_util->getFriendLink();
 
         return view('index', ['site' => $site,'friends' => $frined_links, 'article' => $article_info[0], 'type' => 2]);
     }
 
 
-    public function test(){
-        return "Test";
-    }
 
-    public function getFriendLink(){
-        $links = DB::select('select * from 
-                              `friend_link` 
-                             WHERE 
-                              `link_status`=0 
-                             ORDER BY 
-                              `link_location` 
-                             DESC ');
-        return $links;
-    }
 
 }
