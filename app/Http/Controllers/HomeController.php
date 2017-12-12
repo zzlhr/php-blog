@@ -29,6 +29,10 @@ class HomeController extends Controller
         //标题等网站基本信息
         $site = $this->public_util->getsite();
 
+        //最新文章
+        $newArticle = $this->public_util->getNewArticle();
+
+
         //友情链接
         $frined_links = $this->public_util->getFriendLink();
 
@@ -39,7 +43,7 @@ class HomeController extends Controller
         }
 
 
-        return view('index', ['site' => $site, 'commends' => $commend_article_list, 'friends' => $frined_links, 'type' => 1]);
+        return view('index', ['site' => $site, 'commends' => $commend_article_list, 'friends' => $frined_links, 'type' => 1, 'articles_new' => $newArticle]);
 
     }
 

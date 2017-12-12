@@ -50,4 +50,10 @@ class PublicData
         return $links;
     }
 
+
+    public function getNewArticle(){
+        $articles = DB::select('select `id`, `article_title` from `article` ORDER BY `update_time` DESC LIMIT 0,5');
+        return $articles;
+    }
+
 }

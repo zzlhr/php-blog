@@ -30,6 +30,7 @@
     <h4>评论：</h4>
     <form action="comment" method="post" id="comment">
 
+        <input type="text" class="hidden" name="id" value="{{$article->id}}" />
         <div class="from-group">
             <lable for="comment_name">请输入昵称：</lable>
             <input class="form-control" type="text" id="comment_name" name="name" placeholder="昵称"/>
@@ -44,7 +45,7 @@
 
         <br />
 
-        <button id="sendComment" class="btn btn-info">提交</button>
+        <input type="submit" class="btn btn-info" value="发布留言" />
 
     </form>
 </div>
