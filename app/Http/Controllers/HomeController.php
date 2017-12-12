@@ -28,7 +28,7 @@ class HomeController extends Controller
     public function index(){
         $domain = $this->public_util->getDomain();
 
-        Cookie::forever('domain', $domain);
+//        Cookie::forever('domain', $domain);
 
         //查询推荐文章
         $commend_article_list = DB::select('select * from article WHERE article_commend=1 ORDER BY `id` DESC limit 0,10 ');

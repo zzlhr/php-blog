@@ -53,7 +53,7 @@ class PublicData
 
 
     public function getNewArticle(){
-        $articles = DB::select('select `id`, `article_title` from `article` ORDER BY `update_time` DESC LIMIT 0,5');
+        $articles = DB::select('select `id`, `article_title`,`article_url` from `article` ORDER BY `update_time` DESC LIMIT 0,5');
         return $articles;
     }
 

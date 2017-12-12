@@ -25,8 +25,10 @@ class ArticleController extends Controller
 
     public function index($id){
 
+        $domain = $this->public_util->getDomain();
 
-        $article_info = DB::select('select *  from article WHERE `id` = ?', [$id]);
+
+        $article_info = DB::select('select * from article WHERE `id` = ?', [$id]);
 
         if (count($article_info) == 0){
             // todo: 文章找不到
@@ -46,7 +48,17 @@ class ArticleController extends Controller
         //友情链接
         $frined_links = $this->public_util->getFriendLink();
 
-        return view('index', ['site' => $site,'friends' => $frined_links, 'article' => $article_info[0], 'type' => 2, 'articles_new' => $newArticle]);
+        return view(
+            'index',
+            [
+                'site' => $site,
+                'friends' => $frined_links,
+                'article' => $article_info[0],
+                'type' => 2,
+                'articles_new' => $newArticle,
+                'domain' => $domain,
+            ]
+        );
     }
 
     public function comment($id, $name, $content){

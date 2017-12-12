@@ -39,7 +39,7 @@
                 </div>
                 <ul class="">
                     @foreach($articles_new as $at)
-                        <li><a href="article/{{$at->id}}">{{$at->article_title}}</a></li>
+                        <li><a href="{{$domain}}{{$at->article_url}}">{{$at->article_title}}</a></li>
                     @endforeach
                 </ul>
             </div>

@@ -1,7 +1,7 @@
 @foreach($commends as $commend)
 <article style="margin-left: 30px; margin-right: 30px; height: 100%;">
     <div>
-        <p class="h3"><a href="article/{{$commend->id}}">{{$commend->article_title}}</a></p>
+        <p class="h3"><a href="{{$domain}}{{$commend->article_url}}">{{$commend->article_title}}</a></p>
         <p class="h4" style="color: #666666; line-height: 30px;">{{$commend->article_describe}}</p>
     </div>
     <div class="row">
