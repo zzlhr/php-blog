@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Illuminate\Support\Facades\Cookie;
 use Log;
 use App\Http\Controllers\PublicData;
 
@@ -20,10 +21,17 @@ class HomeController extends Controller
         $this->public_util = new PublicData();
     }
 
+    /**
+     * 首页控制器/ /home
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index(){
+        $domain = $this->public_util->getDomain();
+
+        Cookie::forever('domain', $domain);
 
         //查询推荐文章
-        $commend_article_list = DB::select('select *  from article WHERE article_commend=1 ORDER BY `id` DESC limit 0,10 ');
+        $commend_article_list = DB::select('select * from article WHERE article_commend=1 ORDER BY `id` DESC limit 0,10 ');
 
 
         //标题等网站基本信息
@@ -42,8 +50,20 @@ class HomeController extends Controller
             $commend_article_list[$i]->article_keyword = $keyarray;
         }
 
+        return view(
+            'index',
+            [
+                'site' => $site,
+                'commends' => $commend_article_list,
+                'friends' => $frined_links,
+                'type' => 1,
+                'articles_new' => $newArticle,
+                'domain' => $domain,
+            ]
+        );
 
-        return view('index', ['site' => $site, 'commends' => $commend_article_list, 'friends' => $frined_links, 'type' => 1, 'articles_new' => $newArticle]);
+
+
 
     }
 

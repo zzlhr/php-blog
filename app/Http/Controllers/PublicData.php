@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 use DB;
+use Illuminate\Support\Facades\Request;
 
 
 class PublicData
@@ -54,6 +55,19 @@ class PublicData
     public function getNewArticle(){
         $articles = DB::select('select `id`, `article_title` from `article` ORDER BY `update_time` DESC LIMIT 0,5');
         return $articles;
+    }
+
+    /**
+     * 获取域名
+     * @param Request $request
+     * @return mixed
+     */
+    public function getDomain(){
+
+        $domain = DB::select('select `website_realmname` from `website` WHERE `id`=1');
+        return $domain[0]->website_realmname;
+
+
     }
 
 }
