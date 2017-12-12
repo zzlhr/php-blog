@@ -26,7 +26,9 @@ Route::get('/article/{id}', 'Article\ArticleController@index');
 //});
 Route::post('/article/comment', 'Article\ArticleController@comment');
 
-Route::get("/admin/login.html", 'Admin\AdminController@login');
+//Route::get("/admin/login.html", 'Admin\AdminController@login');
+Route::get("/admin/index.html", 'Admin\AdminController@index');
+Route::post("/admin/login", 'Admin\AdminController@login');
 
 //Route::namespace('HomeController')->group(function ()
 //{

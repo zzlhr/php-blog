@@ -79,6 +79,19 @@ class ArticleController extends Controller
         $id = $request->get('id');
         $name = $request->get('name');
         $content = $request->get('content');
+        if ($id == null){
+            $alertstr = '<script>alert("id不能为空！");location.href="'.$id.'"</script>';
+            return response($alertstr, 200);
+        }
+        if ($name == null){
+            $alertstr = '<script>alert("昵称不能为空！");location.href="'.$id.'"</script>';
+            return response($alertstr, 200);
+        }
+        if ($content == null){
+            $alertstr = '<script>alert("内容不能为空！");location.href="'.$id.'"</script>';
+            return response($alertstr, 200);
+        }
+
         if (!$fid >= 0){
             $fid = 0;
         }
