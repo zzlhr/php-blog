@@ -8,7 +8,9 @@
 
 namespace App\Http\Controllers;
 use DB;
-use Illuminate\Support\Facades\Request;
+use Mockery\Exception;
+use Illuminate\Http\Request;
+
 
 
 class PublicData
@@ -93,4 +95,35 @@ class PublicData
         }
     }
 
+
+    /**
+     * 验证token
+     * @param Request $request
+     * @return bool
+     */
+    public function tokenIsTrue(Request $request){
+
+        $id = $request->cookie('id');
+        $token = $request->cookie('token');
+        try{
+            $admin = DB::select('select `admin_token` from `admin` WHERE `id`='.$id)[0];
+            if($admin->admin_token == $token){
+                return true;
+            }
+        }catch (Exception $e){
+            return false;
+        }
+    }
+
+
+    public function object_array($array) {
+        if(is_object($array)) {
+            $array = (array)$array;
+        } if(is_array($array)) {
+            foreach($array as $key=>$value) {
+                $array[$key] = object_array($value);
+            }
+        }
+        return $array;
+    }
 }
