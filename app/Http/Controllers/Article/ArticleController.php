@@ -35,7 +35,7 @@ class ArticleController extends Controller
 
         $article_info = DB::select('select * from article WHERE `id` = ?', [$id]);
 
-        DB::update('update `article` set `article_praise`='.($article_info[0]->article_praise +1).' where `id`='.$id);
+        DB::update('update `article` set `article_click`='.($article_info[0]->article_click  +1).' where `id`='.$id);
         if (count($article_info) == 0){
             // todo: 文章找不到
             return 404;

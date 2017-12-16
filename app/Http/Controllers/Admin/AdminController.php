@@ -205,9 +205,6 @@ class AdminController extends Controller
 
         return response('<script>alert(\'添加成功！\');</script>',200);
 
-
-
-
     }
 
 
