@@ -44,6 +44,11 @@ Route::get("/admin/articleupdate.html", 'Admin\AdminController@articleupdate');
 Route::get("/admin/articleinfo.html", 'Admin\AdminController@articleinfo');
 
 
+Route::get("/admin/articledelect.html", 'Admin\AdminController@articledelect');
+
+
+
+
 //Route::namespace('HomeController')->group(function ()
 //{
 //    Route::get('/', 'HomeController@index');

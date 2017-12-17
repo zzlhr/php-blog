@@ -99,6 +99,7 @@
                                         <td>
                                             <a class="btn btn-xs" href="articleinfo.html?id={{$article->id}}">详情</a>
                                             <a class="btn btn-xs" href="articleupdate.html?id={{$article->id}}">修改</a>
+                                            <a class="btn btn-xs" href="articledelect.html?id={{$article->id}}">删除</a>
                                         </td>
                                     </tr>
                                 @endforeach

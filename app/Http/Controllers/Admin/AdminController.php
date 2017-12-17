@@ -14,6 +14,7 @@ use App\Http\Controllers\PublicData;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\Log;
 use Mockery\Exception;
 
 
@@ -38,6 +39,14 @@ class AdminController extends Controller
 
 
     function init(Request $request, $title){
+
+        //验证登录
+        if (!$this->public_util->tokenIsTrue($request)){
+//            Log::info('#################未通过验证！####################');
+            throw new Exception('未通过验证');
+        }
+//        Log::info('#################通过验证！####################');
+
         $this->getAdmin($request);
         $this->adminObj['fmenu'] = DB::select('select * from auth_model');
         $this->adminObj['cmenu'] = DB::select('select * from auth_operate WHERE `operate_type`=1');
@@ -62,6 +71,7 @@ class AdminController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
     public function index(Request $request){
+
         try{
             $site = $this->public_util->getsite();
 
@@ -145,15 +155,18 @@ class AdminController extends Controller
      */
     public function articlelist(Request $request){
 
+        try{
+            $result = $this->init($request,'文章列表');
+
+        }catch (Exception $e){
+            return redirect("/admin/login.html");
+        }
+
 
         $article_title = $request->get('title');
         $article_keyword = $request->get('keyword');
         $clazz = $request->get('clazz');
         $page = $request->get('page');
-
-
-
-        $result = $this->init($request,'文章列表');
 
         $result['clazz_dorpdown'] = $this->getClass();
 
@@ -187,8 +200,14 @@ class AdminController extends Controller
      */
     public function articleadd(Request $request){
 
+        try{
+            $result = $this->init($request,'添加文章');
 
-        $result = $this->init($request, '添加文章');
+        }catch (Exception $e){
+            return redirect("/admin/login.html");
+        }
+
+//        $result = $this->init($request, '添加文章');
 
         //该参数没啥用，只是为了兼容修改页面。
         $result['id'] = 0;
@@ -208,6 +227,11 @@ class AdminController extends Controller
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
      */
     public function add_article(Request $request){
+
+
+        if (!$this->public_util->tokenIsTrue($request)){
+            return redirect('/admin/login.html');
+        }
 
         $title = $request->get('title');
         $class= $request->get('class');
@@ -241,11 +265,16 @@ class AdminController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function articleupdate(Request $request){
+        try{
+            $result = $this->init($request,'修改文章');
+
+        }catch (Exception $e){
+            return redirect("/admin/login.html");
+        }
 
 
         $id = $request->get('id');
 
-        $result = $this->init($request, '修改文章');
 
         $result['id'] = $id;
 
@@ -269,6 +298,9 @@ class AdminController extends Controller
      */
     public function update_article(Request $request){
 
+        if (!$this->public_util->tokenIsTrue($request)){
+            return redirect("/admin/login.html");
+        }
 
 
         $id = $request->get('id');
@@ -314,9 +346,15 @@ class AdminController extends Controller
     public function articleinfo(Request $request){
 
 
-        $id = $request->get('id');
+        try{
+            $result = $this->init($request,'文章详情');
 
-        $result = $this->init($request, '文章详情');
+        }catch (Exception $e){
+            return redirect("/admin/login.html");
+        }
+
+
+        $id = $request->get('id');
 
         $result['id'] = $id;
 
@@ -331,6 +369,34 @@ class AdminController extends Controller
 
         return view('admin/articleadd', $result);
     }
+
+
+
+    /**
+     * 删除文章。
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function articledelect(Request $request){
+
+
+        if (!$this->public_util->tokenIsTrue($request)){
+            return redirect("/admin/login.html");
+        }
+
+        $id = $request->get('id');
+
+        if($id == null || $id ==0){
+            return response('<script>alert(\'删除失败！\');</script>',200);
+        }
+
+        DB::table('article')->where('id', $id)->delete();
+
+        return response('<script>alert(\'删除成功！\');location.href=\'articlelist.html\';</script>',200);
+
+    }
+
+
 
     public function test(){
         $url = '/article/'.(DB::select('select max(id) AS id from `article`')[0]->id+1);

@@ -105,14 +105,21 @@ class PublicData
 
         $id = $request->cookie('id');
         $token = $request->cookie('token');
+
+        if ($id == null || $token == null){
+            return false;
+        }
+
         try{
             $admin = DB::select('select `admin_token` from `admin` WHERE `id`='.$id)[0];
             if($admin->admin_token == $token){
                 return true;
             }
         }catch (Exception $e){
+            report($e);
             return false;
         }
+        return false;
     }
 
 
