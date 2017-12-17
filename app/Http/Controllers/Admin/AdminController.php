@@ -56,6 +56,11 @@ class AdminController extends Controller
     }
 
 
+    /**
+     * 后台首页渲染。
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
+     */
     public function index(Request $request){
         try{
             $site = $this->public_util->getsite();
@@ -75,6 +80,12 @@ class AdminController extends Controller
     }
 
 
+    /**
+     * 登录方法
+     * @param CookieJar $cookieJar
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
+     */
     public function login(CookieJar $cookieJar, Request $request){
         $name = $request->get('name');
         $password = $request->get('password');
@@ -127,6 +138,11 @@ class AdminController extends Controller
     }
 
 
+    /**
+     * 文章列表页
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function articlelist(Request $request){
 
 
@@ -159,26 +175,38 @@ class AdminController extends Controller
         return view('admin/articlelist',$result);
     }
 
-
-
     public function getClass(){
         return DB::select('select `class_name` from article_class');
-
     }
 
 
-
+    /**
+     * 添加文章页面
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function articleadd(Request $request){
 
 
         $result = $this->init($request, '添加文章');
 
+        //该参数没啥用，只是为了兼容修改页面。
+        $result['id'] = 0;
 
         $result['class'] = $this->getClass();
+
+        //type 判断是: 添加1，修改2，详情3
+        $result['type'] = 1;
+
 
         return view('admin/articleadd',$result);
     }
 
+    /**
+     * 添加文章post提交方法。
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
     public function add_article(Request $request){
 
         $title = $request->get('title');
@@ -186,7 +214,6 @@ class AdminController extends Controller
         $keyword = $request->get('keyword');
         $describe = $request->get('describe');
         $content = $request->get('content');
-
 
 
         if ($title == '' || $class == '' || $keyword == '' || $describe == '' || $content == ''){
@@ -208,6 +235,102 @@ class AdminController extends Controller
     }
 
 
+    /**
+     * 修改文章get页面方法。
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function articleupdate(Request $request){
+
+
+        $id = $request->get('id');
+
+        $result = $this->init($request, '修改文章');
+
+        $result['id'] = $id;
+
+        $result['type'] = 2;
+
+        $result['class'] = $this->getClass();
+
+        $result['article'] =
+            DB::table('article')
+                ->where('id',$id)
+                ->get()[0];
+
+        return view('admin/articleadd', $result);
+    }
+
+
+    /**
+     * 修改文章post提交方法。
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
+     */
+    public function update_article(Request $request){
+
+
+
+        $id = $request->get('id');
+        $title = $request->get('title');
+        $class= $request->get('class');
+        $keyword = $request->get('keyword');
+        $describe = $request->get('describe');
+        $content = $request->get('content');
+
+
+        if ($id == null || $id == 0){
+            return response('<script>alert(\'修改失败,id不能为空\');</script>',200);
+        }
+        if ($title == null || $title == ""){
+            return response('<script>alert(\'修改失败,标题不能为空\');</script>',200);
+        }
+        if ($class == null || $class == ""){
+            return response('<script>alert(\'修改失败,分类不能为空\');</script>',200);
+        }
+        if ($content == null || $content == ""){
+            return response('<script>alert(\'修改失败,内容不能为空\');</script>',200);
+        }
+
+        DB::table('article')
+            ->where('id',$id)
+            ->update([
+                'article_title' => $title,
+                'article_class' => $class,
+                'article_text' => $content,
+                'article_keyword' => $keyword,
+                'article_describe' => $describe
+            ]);
+        return response('<script>alert(\'修改成功！\');</script>',200);
+
+    }
+
+
+    /**
+     * 文章详情页面。
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function articleinfo(Request $request){
+
+
+        $id = $request->get('id');
+
+        $result = $this->init($request, '文章详情');
+
+        $result['id'] = $id;
+
+        $result['type'] = 0;
+
+        $result['class'] = $this->getClass();
+
+        $result['article'] =
+            DB::table('article')
+                ->where('id',$id)
+                ->get()[0];
+
+        return view('admin/articleadd', $result);
+    }
 
     public function test(){
         $url = '/article/'.(DB::select('select max(id) AS id from `article`')[0]->id+1);

@@ -37,6 +37,13 @@ Route::post("/admin/articleadd.html", 'Admin\AdminController@add_article');
 Route::get("/test.html", 'Admin\AdminController@test');
 
 
+
+Route::post("/admin/articleupdate.html", 'Admin\AdminController@update_article');
+Route::get("/admin/articleupdate.html", 'Admin\AdminController@articleupdate');
+
+Route::get("/admin/articleinfo.html", 'Admin\AdminController@articleinfo');
+
+
 //Route::namespace('HomeController')->group(function ()
 //{
 //    Route::get('/', 'HomeController@index');
